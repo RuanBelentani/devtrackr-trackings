@@ -1,4 +1,5 @@
 ﻿using DevTrackR.Tracking.Core.Repositories;
+using DevTrackR.Tracking.Infrastructure.Messaging;
 using DevTrackR.Tracking.Infrastructure.Persistence;
 using DevTrackR.Tracking.Infrastructure.Persistence.Repositories;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +15,8 @@ namespace DevTrackR.Tracking.Infrastructure
         {
             services
                 .AddMongo()
-                .AddRepositories();
+                .AddRepositories()
+                .AddMessageBus();
 
             return services;
         }
@@ -57,6 +59,13 @@ namespace DevTrackR.Tracking.Infrastructure
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IShippingOrderUpdateRepository, ShippingOrderUpdateRepository>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddMessageBus(this IServiceCollection services)
+        {
+            services.AddScoped<IMessageBusService, RabbitMqService>();
 
             return services;
         }
